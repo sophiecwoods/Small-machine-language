@@ -26,4 +26,9 @@ public class AddInstruction extends Instruction {
     public void execute(Machine m) {
         // TODO: Implement
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + register + " " + s1 + " " + s2;
+    }
 }
