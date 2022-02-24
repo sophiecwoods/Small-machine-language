@@ -24,7 +24,7 @@ public class AddInstruction extends Instruction {
 
     @Override
     public void execute(Machine m) {
-        // TODO: Implement
+        m.getRegisters().setRegister(register, s1 + s2);
     }
 
     @Override
