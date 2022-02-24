@@ -10,8 +10,16 @@ import sml.Machine;
  */
 public class AddInstruction extends Instruction {
 
+    private String label;
+    private int register;
+    private int s1;
+    private int s2;
+
     public AddInstruction(String label, int register, int s1, int s2){
-        super("Something", "Something Else");
+        super(label, "add");
+        this.register = register;
+        this.s1 = s1;
+        this.s2 = s2;
     }
 
     @Override
