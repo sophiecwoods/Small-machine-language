@@ -27,6 +27,6 @@ public class LinInstruction extends Instruction {
 
     @Override
     public String toString() {
-        return super.toString() + " " + register;
+        return super.toString() + " " + register + " " + x;
     }
 }
