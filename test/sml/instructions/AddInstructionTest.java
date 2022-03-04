@@ -7,7 +7,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import sml.Instruction;
 import sml.Machine;
-import sml.Translator;
 
 import java.util.ArrayList;
 
@@ -36,6 +35,8 @@ class AddInstructionTest {
 
   @AfterEach
   void tearDown() {
+    m = null;
+    instructions = null;
   }
 
   @ParameterizedTest
