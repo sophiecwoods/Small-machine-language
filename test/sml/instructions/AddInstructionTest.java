@@ -15,18 +15,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AddInstructionTest {
   private Machine m;
-  private Translator t;
+  private ArrayList<Instruction> instructions;
 
   @BeforeEach
   void setUp() {
     m = new Machine();
+    instructions = new ArrayList<>();
+
     // test add contents of 2 registers both initialised to 0 and store result in third register also initialised to 0
     Instruction i1 = new AddInstruction("L1", 0, 1, 2);
 
     // test add contents of 2 registers both initialised to 0 and store result in third register, set to 100
     Instruction i2 = new AddInstruction("L2", 10, 20, 30);
 
-    ArrayList<Instruction> instructions = new ArrayList<>();
     instructions.add(i1);
     instructions.add(i2);
 
