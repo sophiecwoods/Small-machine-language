@@ -54,12 +54,12 @@ class LinInstructionTest {
 
     @ParameterizedTest
     @CsvSource({
-            "1, 1", // i1
-            "31, -99", // i2
-            "4, 400", // i3
-            "18, 2_147_483_647", // i4
+            "1, 1", // after i1
+            "31, -99", // after i2
+            "4, 400", // after i3
+            "18, 2_147_483_647", // after i4
             "23, -2_147_483_648", // after i5 & i6
-            "25, 0" // i7
+            "25, 0" // after i7
     })
     void execute(int register, int value) {
         m.execute();
