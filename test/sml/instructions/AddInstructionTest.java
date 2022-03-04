@@ -72,14 +72,14 @@ class AddInstructionTest {
 
   @ParameterizedTest
   @CsvSource({
-          "0, 0", // i1
-          "10, 0", // i3
-          "15, -5", // i5
-          "24, 100_001", // i8
-          "31, 180", // i10
-          "5, 200_000", // i11
-          "8, -2_147_483_648", // i13
-          "12, -10", // i15
+          "0, 0", // after i1
+          "10, 0", // after i3
+          "15, -5", // after i5
+          "24, 100_001", // after i8
+          "31, 180", // after i10
+          "5, 200_000", // after i11
+          "8, -2_147_483_648", // after i13
+          "12, -10", // after i15
   })
   void execute(int register, int value) {
     m.execute();
