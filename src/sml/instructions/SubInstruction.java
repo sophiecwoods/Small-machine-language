@@ -24,10 +24,12 @@ public class SubInstruction extends Instruction {
 
     @Override
     public void execute(Machine m) {
-
+        int r1 = m.getRegisters().getRegister(s1);
+        int r2 = m.getRegisters().getRegister(s2);
+        m.getRegisters().setRegister(register, r1 - r2);
     }
 
     @Override
-    public String toString() { return null; }
+    public String toString() { return super.toString() + " " + register + " " + s1 + " " + s2; }
 }
 
