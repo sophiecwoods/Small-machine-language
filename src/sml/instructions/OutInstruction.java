@@ -21,7 +21,9 @@ public class OutInstruction extends Instruction {
     }
 
     @Override
-    public void execute(Machine m) { System.out.println(s1); }
+    public void execute(Machine m) {
+        System.out.println(m.getRegisters().getRegister(s1));
+    }
 
     @Override
     public String toString() {
