@@ -47,7 +47,7 @@ class OutInstructionTest {
 
     @Test
     void execute() {
-        String output = "0\n15";
+        String output = "0\n100";
         m.execute();
         assertEquals(output, outputStream.toString().trim());
     }
