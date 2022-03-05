@@ -55,7 +55,7 @@ class AddInstructionTest {
     // test add number to Integer.MaxValue results in overflow
     Instruction i13 = new AddInstruction("L13", 8, 22, 9);
 
-    // test  add instruction stored to register followed by add to same register
+    // test  add instruction stored to register followed by add stored to same register
     // overwrites previous add
     Instruction i14 = new AddInstruction("L14", 12, 30, 31);
     Instruction i15 = new AddInstruction("L15", 12, 17, 17);
