@@ -4,7 +4,7 @@ import sml.Instruction;
 import sml.Machine;
 
 /**
- * This class represents the Add instruction from the language.
+ * This class represents the Mul (multiply) instruction from the language.
  *
  * @author Sophie Woods
  */

@@ -4,7 +4,7 @@ import sml.Instruction;
 import sml.Machine;
 
 /**
- * This class represents the Subtrat instruction from the language.
+ * This class represents the Sub (subtract) instruction from the language.
  *
  * @author Sophie Woods
  */
