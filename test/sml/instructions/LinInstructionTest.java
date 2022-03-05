@@ -62,9 +62,9 @@ class LinInstructionTest {
             "23, -2_147_483_648", // after i5 & i6
             "25, 0" // after i7
     })
-    void execute(int register, int value) {
+    void execute(int register, int regContent) {
         m.execute();
-        assertEquals(value, m.getRegisters().getRegister(register));
+        assertEquals(regContent, m.getRegisters().getRegister(register));
     }
 
     @Test

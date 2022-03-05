@@ -84,9 +84,9 @@ class MulInstructionTest {
             "8, -2", // after i14
             "12, 25", // after i16
     })
-    void execute(int register, int value) {
+    void execute(int register, int regContent) {
         m.execute();
-        assertEquals(value, m.getRegisters().getRegister(register));
+        assertEquals(regContent, m.getRegisters().getRegister(register));
     }
 
     @Test

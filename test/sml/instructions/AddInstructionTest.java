@@ -82,9 +82,9 @@ class AddInstructionTest {
           "8, -2_147_483_648", // after i13
           "12, -10", // after i15
   })
-  void execute(int register, int value) {
+  void execute(int register, int regContent) {
     m.execute();
-    assertEquals(value, m.getRegisters().getRegister(register));
+    assertEquals(regContent, m.getRegisters().getRegister(register));
   }
 
   @Test

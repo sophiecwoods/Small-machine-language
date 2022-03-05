@@ -78,9 +78,9 @@ class DivInstructionTest {
             "21, 1", // after i13
             "19, -400_000", // after i15
     })
-    void execute(int register, int value) {
+    void execute(int register, int regContent) {
         m.execute();
-        assertEquals(value, m.getRegisters().getRegister(register));
+        assertEquals(regContent, m.getRegisters().getRegister(register));
     }
 
     @Test
