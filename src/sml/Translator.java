@@ -120,7 +120,11 @@ public final class Translator {
                 s1 = scanInt();
                 return new LinInstruction(label, r, s1);
             }
-
+            case "bnz" -> {
+                s1 = scanInt();
+                lbl = scan();
+                return new BnzInstruction(label, s1, lbl);
+            }
             default -> {
                 System.out.println("Unknown instruction: " + opCode);
             }
