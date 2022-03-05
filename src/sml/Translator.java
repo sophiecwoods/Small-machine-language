@@ -1,6 +1,7 @@
 package sml;
 
 import sml.instructions.AddInstruction;
+import sml.instructions.LinInstruction;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,7 +94,11 @@ public final class Translator {
                 s2 = scanInt();
                 return new AddInstruction(label, r, s1, s2);
             }
-            // TODO: You will have to write code here for the other instructions.
+            case "lin" -> {
+                r = scanInt();
+                s1 = scanInt();
+                return new LinInstruction(label, r, s1);
+            }
 
             default -> {
                 System.out.println("Unknown instruction: " + opCode);
