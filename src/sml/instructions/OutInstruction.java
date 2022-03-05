@@ -21,11 +21,10 @@ public class OutInstruction extends Instruction {
     }
 
     @Override
-    public void execute(Machine m) {
-    }
+    public void execute(Machine m) { System.out.println(s1); }
 
     @Override
     public String toString() {
-        return null;
+        return super.toString() + " " + s1;
     }
 }
