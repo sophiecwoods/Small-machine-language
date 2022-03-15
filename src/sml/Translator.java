@@ -94,6 +94,8 @@ public final class Translator {
        Class<?> c = getInstructionClass(opCode);
        Class[] params = getConstructorParamTypes(c);
        Object[] arguments = getConstructorArguments(c, label);
+       // create a new Instruction object with the right constructor based on the parameters and arguments
+        // identified via reflection in 3 methods above
        Instruction ins = (Instruction) c.getDeclaredConstructor(params).newInstance(arguments);
 
        return ins;
