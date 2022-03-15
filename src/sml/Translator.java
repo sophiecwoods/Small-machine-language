@@ -127,9 +127,9 @@ public final class Translator {
             }
             default -> {
                 System.out.println("Unknown instruction: " + opCode);
+                return null;
             }
         }
-        return null; // FIX THIS
     }
 
     /*
