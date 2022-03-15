@@ -6,7 +6,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.util.*;
+
+import static java.lang.Class.forName;
 
 /**
  * This class ....
@@ -33,7 +36,8 @@ public final class Translator {
     // prog (the program)
     // return "no errors were detected"
 
-    public boolean readAndTranslate(Labels lab, List<Instruction> prog) {
+    public boolean readAndTranslate(Labels lab, List<Instruction> prog) throws InvocationTargetException,
+            InstantiationException, IllegalAccessException, NoSuchMethodException {
         try (var sc = new Scanner(new File(fileName), "UTF-8")) {
             // Scanner attached to the file chosen by the user
             // The labels of the program being translated
@@ -75,7 +79,8 @@ public final class Translator {
 
     // The input line should consist of an SML instruction, with its label already removed.
     // Translate line into an instruction with label "label" and return the instruction
-    public Instruction getInstruction(String label) {
+    public Instruction getInstruction(String label) throws InvocationTargetException,
+            InstantiationException, IllegalAccessException, NoSuchMethodException {
         int s1; // Possible operands of the instruction
         int s2;
         int r;
@@ -87,8 +92,11 @@ public final class Translator {
         var opCode = scan();
 
        Class<?> c = getInstructionClass(opCode);
+       Class[] params = getConstructorParamTypes(c);
+       Object[] arguments = getConstructorArguments(c, label);
+       Instruction ins = (Instruction) c.getDeclaredConstructor(params).newInstance(arguments);
 
-        return null;
+       return ins;
     }
 
     /*
@@ -132,10 +140,49 @@ public final class Translator {
                 + opCode.substring(1) + "Instruction";
         Class<?> c = null;
         try {
-            c = Class.forName(className);
+            c = forName(className);
         } catch (ClassNotFoundException e) {
             System.err.println("Unknown instruction: " + opCode);
         }
         return c;
+    }
+
+    /*
+     * Return the parameter types of the constructor of the Instruction Class
+     */
+    public Class[] getConstructorParamTypes(Class<?> c) {
+        Constructor<?>[] constructors = c.getConstructors();
+        Class<?>[] paramTypes = null;
+        for (Constructor<?> con : constructors) {
+            paramTypes = con.getParameterTypes();
+        }
+        return paramTypes;
+    }
+
+    /*
+     * Return the arguments to pass into the constructor of the Instruction Class
+     */
+    public Object[] getConstructorArguments(Class<?> c, String label)  {
+        Constructor<?>[] constructors = c.getConstructors();
+        Object[] arguments = null;
+
+        for (Constructor<?> con : constructors) {
+          Parameter[] params = con.getParameters();
+          Class<?>[] paramTypes = con.getParameterTypes();
+          arguments = new Object[params.length];
+          arguments[0] = label;
+
+          for (int i = 1; i < params.length; i++) {
+              // check whether argument should be a String or Integer based on parameters
+              // use scan and scanInt methods to process arguments accordingly
+              if(paramTypes[i] == String.class) {
+                  arguments[i] = scan();
+              }
+              else {
+                  arguments[i] = scanInt();
+              }
+          }
+        }
+        return arguments;
     }
 }
