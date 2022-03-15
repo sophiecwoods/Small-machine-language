@@ -86,50 +86,9 @@ public final class Translator {
         }
         var opCode = scan();
 
-        switch (opCode) {
-            case "add" -> {
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new AddInstruction(label, r, s1, s2);
-            }
-            case "sub" -> {
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new SubInstruction(label, r, s1, s2);
-            }
-            case "mul" -> {
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new MulInstruction(label, r, s1, s2);
-            }
-            case "div" -> {
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new DivInstruction(label, r, s1, s2);
-            }
-            case "out" -> {
-                s1 = scanInt();
-                return new OutInstruction(label, s1);
-            }
-            case "lin" -> {
-                r = scanInt();
-                s1 = scanInt();
-                return new LinInstruction(label, r, s1);
-            }
-            case "bnz" -> {
-                s1 = scanInt();
-                lbl = scan();
-                return new BnzInstruction(label, s1, lbl);
-            }
-            default -> {
-                System.out.println("Unknown instruction: " + opCode);
-                return null;
-            }
-        }
+       Class<?> c = getInstructionClass(opCode);
+
+        return null;
     }
 
     /*
@@ -162,5 +121,21 @@ public final class Translator {
         } catch (NumberFormatException e) {
             return Integer.MAX_VALUE;
         }
+    }
+
+    /*
+     * Find and return the class given by the opCode using reflection. If no class is found return null.
+     */
+    public Class<?> getInstructionClass(String opCode) {
+        // convert the opCode into a String with syntax matching the name of the class
+        String className = "sml.instructions." + opCode.substring(0, 1).toUpperCase()
+                + opCode.substring(1) + "Instruction";
+        Class<?> c = null;
+        try {
+            c = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Unknown instruction: " + opCode);
+        }
+        return c;
     }
 }
