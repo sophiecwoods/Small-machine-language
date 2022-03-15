@@ -1,5 +1,6 @@
 package sml;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 
 public class Main {
@@ -8,7 +9,8 @@ public class Main {
    *
    * @param args name of the file containing the program text.
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InvocationTargetException,
+          InstantiationException, IllegalAccessException, NoSuchMethodException {
     if (args.length != 1) {
       System.err.println("Incorrect number of arguments - Machine <file> - required");
       System.exit(-1);
