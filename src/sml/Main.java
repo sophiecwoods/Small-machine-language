@@ -2,6 +2,7 @@ package sml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
+import static sml.Translator.getTranslatorInst;
 
 public class Main {
   /**
@@ -10,14 +11,14 @@ public class Main {
    * @param args name of the file containing the program text.
    */
   public static void main(String[] args) throws InvocationTargetException,
-          InstantiationException, IllegalAccessException, NoSuchMethodException {
+          InstantiationException, IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
     if (args.length != 1) {
       System.err.println("Incorrect number of arguments - Machine <file> - required");
       System.exit(-1);
     }
 
     Machine m = new Machine();
-    Translator t = new Translator(args[0]);
+    Translator t = getTranslatorInst(args[0]);
     t.readAndTranslate(m.getLabels(), m.getProg());
 
     System.out.println("Here is the program; it has " + m.getProg().size() + " instructions.");

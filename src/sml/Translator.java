@@ -16,8 +16,9 @@ import static java.lang.Class.forName;
  * <p>
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
  *
- * @author ...
+ * @author Sophie Woods
  */
+
 public final class Translator {
 
     private static final String PATH = "";
@@ -28,8 +29,16 @@ public final class Translator {
     private final String fileName; // source file of SML code
     private String line = "";
 
-    public Translator(String file) {
-        fileName = PATH + file;
+    // create a Singleton version of Translator
+    private static Translator instance = null;
+
+    private Translator(String file) {fileName = PATH + file;}
+
+    public static Translator getTranslatorInst(String file) {
+        if (instance == null) {
+            instance = new Translator(file);
+        }
+        return instance;
     }
 
     // translate the small program in the file into lab (the labels) and
@@ -91,14 +100,14 @@ public final class Translator {
         }
         var opCode = scan();
 
-       Class<?> c = getInstructionClass(opCode);
-       Class[] params = getConstructorParamTypes(c);
-       Object[] arguments = getConstructorArguments(c, label);
-       // create a new Instruction object with the right constructor based on the parameters and arguments
+        Class<?> c = getInstructionClass(opCode);
+        Class[] params = getConstructorParamTypes(c);
+        Object[] arguments = getConstructorArguments(c, label);
+        // create a new Instruction object with the right constructor based on the parameters and arguments
         // identified via reflection in 3 methods above
-       Instruction ins = (Instruction) c.getDeclaredConstructor(params).newInstance(arguments);
+        Instruction ins = (Instruction) c.getDeclaredConstructor(params).newInstance(arguments);
 
-       return ins;
+        return ins;
     }
 
     /*
@@ -169,21 +178,21 @@ public final class Translator {
         Object[] arguments = null;
 
         for (Constructor<?> con : constructors) {
-          Parameter[] params = con.getParameters();
-          Class<?>[] paramTypes = con.getParameterTypes();
-          arguments = new Object[params.length];
-          arguments[0] = label;
+            Parameter[] params = con.getParameters();
+            Class<?>[] paramTypes = con.getParameterTypes();
+            arguments = new Object[params.length];
+            arguments[0] = label;
 
-          for (int i = 1; i < params.length; i++) {
-              // check whether argument should be a String or Integer based on parameters
-              // use scan and scanInt methods to process arguments accordingly
-              if(paramTypes[i] == String.class) {
-                  arguments[i] = scan();
-              }
-              else {
-                  arguments[i] = scanInt();
-              }
-          }
+            for (int i = 1; i < params.length; i++) {
+                // check whether argument should be a String or Integer based on parameters
+                // use scan and scanInt methods to process arguments accordingly
+                if(paramTypes[i] == String.class) {
+                    arguments[i] = scan();
+                }
+                else {
+                    arguments[i] = scanInt();
+                }
+            }
         }
         return arguments;
     }
