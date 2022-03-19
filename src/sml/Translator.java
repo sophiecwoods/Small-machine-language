@@ -1,5 +1,7 @@
 package sml;
 
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.AbstractApplicationContext;
 import sml.instructions.*;
 
 import java.io.File;
@@ -29,10 +31,16 @@ public final class Translator {
     private final String fileName; // source file of SML code
     private String line = "";
 
+    // create a label field which can be accessed by Instruction classes via the getLabel() method
+    private String label;
+
+    // create an opcode field which can be accessed by Instruction classes via the getOpcode() method
+    private String opcode;
+
     // create a Singleton version of Translator
     private static Translator instance = null;
 
-    private Translator(String file) {fileName = PATH + file;}
+    private Translator(String file) { fileName = PATH + file; }
 
     public static Translator getTranslatorInst(String file) {
         if (instance == null) {
@@ -90,24 +98,18 @@ public final class Translator {
     // Translate line into an instruction with label "label" and return the instruction
     public Instruction getInstruction(String label) throws InvocationTargetException,
             InstantiationException, IllegalAccessException, NoSuchMethodException {
-        int s1; // Possible operands of the instruction
-        int s2;
-        int r;
-        String lbl;
+
+        this.label = label;
 
         if (line.equals("")) {
             return null;
         }
-        var opCode = scan();
 
-        Class<?> c = getInstructionClass(opCode);
-        Class[] params = getConstructorParamTypes(c);
-        Object[] arguments = getConstructorArguments(c, label);
-        // create a new Instruction object with the right constructor based on the parameters and arguments
-        // identified via reflection in 3 methods above
-        Instruction ins = (Instruction) c.getDeclaredConstructor(params).newInstance(arguments);
+        this.opcode = scan();
 
-        return ins;
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(SmlConfig.class);
+        return (Instruction) context.getBean(opcode + "Instruction");
+
     }
 
     /*
@@ -142,58 +144,18 @@ public final class Translator {
         }
     }
 
-    /*
-     * Find and return the class given by the opCode using reflection. If no class is found return null.
-     */
-    public Class<?> getInstructionClass(String opCode) {
-        // convert the opCode into a String with syntax matching the name of the class
-        String className = "sml.instructions." + opCode.substring(0, 1).toUpperCase()
-                + opCode.substring(1) + "Instruction";
-        Class<?> c = null;
-        try {
-            c = forName(className);
-        } catch (ClassNotFoundException e) {
-            System.err.println("Unknown instruction: " + opCode);
-        }
-        return c;
+    // accessor method for Bean creation
+    public String getLabel() {
+        return this.label;
     }
 
-    /*
-     * Return the parameter types of the constructor of the Instruction Class
-     */
-    public Class[] getConstructorParamTypes(Class<?> c) {
-        Constructor<?>[] constructors = c.getConstructors();
-        Class<?>[] paramTypes = null;
-        for (Constructor<?> con : constructors) {
-            paramTypes = con.getParameterTypes();
-        }
-        return paramTypes;
+    // accessor method for Bean creation
+    public String getFileName() {
+        return this.fileName;
     }
 
-    /*
-     * Return the arguments to pass into the constructor of the Instruction Class
-     */
-    public Object[] getConstructorArguments(Class<?> c, String label)  {
-        Constructor<?>[] constructors = c.getConstructors();
-        Object[] arguments = null;
-
-        for (Constructor<?> con : constructors) {
-            Parameter[] params = con.getParameters();
-            Class<?>[] paramTypes = con.getParameterTypes();
-            arguments = new Object[params.length];
-            arguments[0] = label;
-
-            for (int i = 1; i < params.length; i++) {
-                // check whether argument should be a String or Integer based on parameters
-                // use scan and scanInt methods to process arguments accordingly
-                if(paramTypes[i] == String.class) {
-                    arguments[i] = scan();
-                }
-                else {
-                    arguments[i] = scanInt();
-                }
-            }
-        }
-        return arguments;
+    // accessor method for Bean creation
+    public String getOpcode() {
+        return this.opcode;
     }
 }

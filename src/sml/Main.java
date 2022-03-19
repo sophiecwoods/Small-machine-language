@@ -18,7 +18,10 @@ public class Main {
     }
 
     Machine m = new Machine();
+    // create Translator instance using Singleton approach
     Translator t = getTranslatorInst(args[0]);
+    // pass file to SmlConfig, so it can access the Translator instance and its methods
+    SmlConfig.getTranslatorFromFile(args[0]);
     t.readAndTranslate(m.getLabels(), m.getProg());
 
     System.out.println("Here is the program; it has " + m.getProg().size() + " instructions.");
