@@ -2,24 +2,53 @@ package sml.instructions;
 
 import sml.Instruction;
 import sml.Machine;
+import sml.Translator;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static sml.Translator.getTranslatorInst;
 
 /**
  * This class represents the Add instruction from the language.
  *
  * @author Sophie Woods
  */
+
 public class AddInstruction extends Instruction {
 
-    private String label;
     private int register;
     private int s1;
     private int s2;
+    private Translator translator;
+
+    /*
+     * Default constructor
+     */
+    public AddInstruction(String label, String fileName, String opcode) throws InvocationTargetException,
+            NoSuchMethodException, IllegalAccessException {
+        super(label, opcode);
+        if (opcode.equals("add")) setAddInstruction(fileName);
+    }
 
     public AddInstruction(String label, int register, int s1, int s2){
         super(label, "add");
         this.register = register;
         this.s1 = s1;
         this.s2 = s2;
+    }
+
+    /*
+     * Mutator method to set the field values
+     */
+    public void setAddInstruction(String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        translator = getTranslatorInst(fileName);
+        // use reflection to access Translator scanInt method
+        Method scanInt = Translator.class.getDeclaredMethod("scanInt");
+        scanInt.setAccessible(true);
+        this.register = (int) scanInt.invoke(translator);
+        this.s1 = (int) scanInt.invoke(translator);
+        this.s2 = (int) scanInt.invoke(translator);
     }
 
     @Override
