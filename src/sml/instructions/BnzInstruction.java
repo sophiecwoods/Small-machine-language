@@ -2,27 +2,56 @@ package sml.instructions;
 
 import sml.Instruction;
 import sml.Machine;
+import sml.Translator;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static sml.Translator.getTranslatorInst;
 
 /**
  * This class represents the BNZ (branch if not zero) instruction from the language.
  *
  * @author Sophie Woods
  */
+
 public class BnzInstruction extends Instruction {
 
-    private String label1;
-    private int s1;
+    private int register;
     private String label2;
 
-    public BnzInstruction(String label1, int s1, String label2){
-        super(label1, "bnz");
-        this.s1 = s1;
+    /*
+     * Default constructor
+     */
+    public BnzInstruction(String label, String fileName, String opcode) throws InvocationTargetException,
+            NoSuchMethodException, IllegalAccessException {
+        super(label,opcode);
+        if (opcode.equals("bnz"))setBnzInstruction(fileName);
+    }
+
+    public BnzInstruction(String label, int register, String label2){
+        super(label, "bnz");
+        this.register = register;
         this.label2 = label2;
+    }
+
+    /*
+     * Mutator method to set the field values
+     */
+    public void setBnzInstruction(String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Translator translator = getTranslatorInst(fileName);
+        // use reflection to access Translator scanInt and scan methods
+        Method scanInt = Translator.class.getDeclaredMethod("scanInt");
+        scanInt.setAccessible(true);
+        Method scan = Translator.class.getDeclaredMethod("scan");
+        scan.setAccessible(true);
+        this.register = (int) scanInt.invoke(translator);
+        this.label2 = (String) scan.invoke(translator);
     }
 
     @Override
     public void execute(Machine m) {
-        int r1 = m.getRegisters().getRegister(s1);
+        int r1 = m.getRegisters().getRegister(register);
         // if contents of s1 is not 0
         // find instruction with label2 and set Pc to index of that instruction in prog
         if (r1 != 0) {
@@ -38,5 +67,5 @@ public class BnzInstruction extends Instruction {
     }
 
     @Override
-    public String toString() { return super.toString() + " " + s1 + " " + label2; }
+    public String toString() { return super.toString() + " " + register + " " + label2; }
 }
