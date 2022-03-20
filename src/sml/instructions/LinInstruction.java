@@ -1,5 +1,7 @@
 package sml.instructions;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import sml.Instruction;
 import sml.Machine;
 import sml.Translator;
@@ -15,14 +17,16 @@ import static sml.Translator.getTranslatorInst;
  * @author Sophie Woods
  */
 
+@Component("linInstruction")
 public class LinInstruction extends Instruction {
 
     private int register;
     private int s1;
 
     /*
-     * Default constructor
+     * Default constructor checks whether bean injected is AddInstruction and calls mutator to set fields if so
      */
+    @Autowired
     public LinInstruction(String label, String fileName, String opcode) throws InvocationTargetException,
             NoSuchMethodException, IllegalAccessException {
         super(label, opcode);
