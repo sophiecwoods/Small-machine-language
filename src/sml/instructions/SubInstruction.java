@@ -12,31 +12,30 @@ import java.lang.reflect.Method;
 import static sml.Translator.getTranslatorInst;
 
 /**
- * This class represents the Add instruction from the language.
+ * This class represents the Sub (subtract) instruction from the language.
  *
  * @author Sophie Woods
  */
 
-@Component("addInstruction")
-public class AddInstruction extends Instruction {
+@Component("subInstruction")
+public class SubInstruction extends Instruction {
 
     private int register;
     private int s1;
     private int s2;
-    private Translator translator;
 
     /*
      * Default constructor checks whether bean injected is AddInstruction and calls mutator to set fields if so
      */
     @Autowired
-    public AddInstruction(String label, String fileName, String opcode) throws InvocationTargetException,
+    public SubInstruction(String label, String fileName, String opcode) throws InvocationTargetException,
             NoSuchMethodException, IllegalAccessException {
         super(label, opcode);
-        if (opcode.equals("add")) setAddInstruction(fileName);
+        if(opcode.equals("sub")) setSubInstruction(fileName);
     }
 
-    public AddInstruction(String label, int register, int s1, int s2){
-        super(label, "add");
+    public SubInstruction(String label, int register, int s1, int s2){
+        super(label, "sub");
         this.register = register;
         this.s1 = s1;
         this.s2 = s2;
@@ -45,8 +44,8 @@ public class AddInstruction extends Instruction {
     /*
      * Mutator method to set the field values
      */
-    public void setAddInstruction(String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        translator = getTranslatorInst(fileName);
+    public void setSubInstruction(String fileName) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Translator translator = getTranslatorInst(fileName);
         // use reflection to access Translator scanInt method
         Method scanInt = Translator.class.getDeclaredMethod("scanInt");
         scanInt.setAccessible(true);
@@ -59,11 +58,10 @@ public class AddInstruction extends Instruction {
     public void execute(Machine m) {
         int r1 = m.getRegisters().getRegister(s1);
         int r2 = m.getRegisters().getRegister(s2);
-        m.getRegisters().setRegister(register, r1 + r2);
+        m.getRegisters().setRegister(register, r1 - r2);
     }
 
     @Override
-    public String toString() {
-        return super.toString() + " " + register + " " + s1 + " " + s2;
-    }
+    public String toString() { return super.toString() + " " + register + " " + s1 + " " + s2; }
 }
+

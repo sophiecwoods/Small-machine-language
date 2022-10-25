@@ -1,20 +1,26 @@
 package sml;
 
-import sml.instructions.AddInstruction;
+import org.springframework.context.annotation.*;
+import org.springframework.context.support.AbstractApplicationContext;
+import sml.instructions.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
 import java.util.*;
+
+import static java.lang.Class.forName;
 
 /**
  * This class ....
  * <p>
  * The translator of a <b>S</b><b>M</b>al<b>L</b> program.
  *
- * @author ...
+ * @author Sophie Woods
  */
+
 public final class Translator {
 
     private static final String PATH = "";
@@ -25,15 +31,30 @@ public final class Translator {
     private final String fileName; // source file of SML code
     private String line = "";
 
-    public Translator(String file) {
-        fileName = PATH + file;
+    // create a label field which can be accessed by Instruction classes via the getLabel() method
+    private String label;
+
+    // create an opcode field which can be accessed by Instruction classes via the getOpcode() method
+    private String opcode;
+
+    // create a Singleton version of Translator
+    private static Translator instance = null;
+
+    private Translator(String file) { fileName = PATH + file; }
+
+    public static Translator getTranslatorInst(String file) {
+        if (instance == null) {
+            instance = new Translator(file);
+        }
+        return instance;
     }
 
     // translate the small program in the file into lab (the labels) and
     // prog (the program)
     // return "no errors were detected"
 
-    public boolean readAndTranslate(Labels lab, List<Instruction> prog) {
+    public boolean readAndTranslate(Labels lab, List<Instruction> prog) throws InvocationTargetException,
+            InstantiationException, IllegalAccessException, NoSuchMethodException {
         try (var sc = new Scanner(new File(fileName), "UTF-8")) {
             // Scanner attached to the file chosen by the user
             // The labels of the program being translated
@@ -75,31 +96,20 @@ public final class Translator {
 
     // The input line should consist of an SML instruction, with its label already removed.
     // Translate line into an instruction with label "label" and return the instruction
-    public Instruction getInstruction(String label) {
-        int s1; // Possible operands of the instruction
-        int s2;
-        int r;
-        String lbl;
+    public Instruction getInstruction(String label) throws InvocationTargetException,
+            InstantiationException, IllegalAccessException, NoSuchMethodException {
+
+        this.label = label;
 
         if (line.equals("")) {
             return null;
         }
-        var opCode = scan();
 
-        switch (opCode) {
-            case "add" -> {
-                r = scanInt();
-                s1 = scanInt();
-                s2 = scanInt();
-                return new AddInstruction(label, r, s1, s2);
-            }
-            // TODO: You will have to write code here for the other instructions.
+        this.opcode = scan();
 
-            default -> {
-                System.out.println("Unknown instruction: " + opCode);
-            }
-        }
-        return null; // FIX THIS
+        AbstractApplicationContext context = new AnnotationConfigApplicationContext(SmlConfig.class);
+        return (Instruction) context.getBean(opcode + "Instruction");
+
     }
 
     /*
@@ -132,5 +142,20 @@ public final class Translator {
         } catch (NumberFormatException e) {
             return Integer.MAX_VALUE;
         }
+    }
+
+    // accessor method for Bean creation
+    public String getLabel() {
+        return this.label;
+    }
+
+    // accessor method for Bean creation
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    // accessor method for Bean creation
+    public String getOpcode() {
+        return this.opcode;
     }
 }

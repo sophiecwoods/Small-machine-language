@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/coursework-small-machine-language.iml" filepath="$PROJECT_DIR$/coursework-small-machine-language.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/idea-spring-tools/lib/lib.iml" filepath="$USER_HOME$/Downloads/idea-spring-tools/lib/lib.iml" />
     </modules>
   </component>
 </project>

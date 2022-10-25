@@ -3,8 +3,9 @@ package sml;
 /**
  * This class represents an abstract instruction
  *
- * @author ...
+ * @author Sophie Woods
  */
+
 public abstract class Instruction {
   private String label;
   private String opcode;
@@ -39,11 +40,8 @@ public abstract class Instruction {
 
   public abstract void execute(Machine m);
 
-  // =
-
   @Override
   public String toString() {
     return getLabel() + ": " + getOpcode();
   }
-
 }
