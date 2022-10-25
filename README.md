@@ -6,8 +6,6 @@
 + This assignment is to be completed individually.
 + The sample code mentioned in the text can be found in this repository.
 
-<img src="/Users/keith/Documents/Courses/sdp-sp3/2021/coursework-small-machine-language/sml.jpg" alt="sml" style="zoom:67%;" />
-
 The aim of this assignment is to give you practice with 
 
 + subclasses, 
@@ -19,12 +17,6 @@ The aim of this assignment is to give you practice with
 amongst other skills.
 
 ## Details
-
-**Name**: Sophie Woods
-
-**Your userid**: swoods07
-
-Please do not forget to complete this part as too often we have "orphaned" repositories which can require months to sort out.
 
 ## The problem
 
